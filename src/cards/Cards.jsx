@@ -1,12 +1,11 @@
 import { Container } from '@mui/material'
 import CardComponent from './CardComponent';
+import { useEffect } from 'react';
 
 
-export default function Cards({ cards, handleDelete, handleLike }) {
+export default function Cards({ cards, handleDelete, handleLike, handleEdit }) {
 
-    const handleEdit = (id) => {
-        console.log(`Edit button clicked for card with id ${id}`);
-    };
+    useEffect(() => { console.log(cards); }, [])
 
     return (
         <Container sx={{ display: "flex", flexWrap: "wrap" }}>

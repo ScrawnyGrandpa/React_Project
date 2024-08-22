@@ -17,13 +17,12 @@ export default function useCards() {
 
     useAxios();
 
+    const apiURL = "https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards"
 
     // All Cards
     const getAllCards = useCallback(async () => {
         try {
-            let response = await axios.get(
-                "https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards"
-            );
+            let response = await axios.get(apiURL);
             setCards(response.data);
             setSnack("success", "All cards are here!");
         } catch (err) {
@@ -36,9 +35,7 @@ export default function useCards() {
     // Card by ID
     const getCardById = useCallback(async (id) => {
         try {
-            const response = await axios.get(
-                `https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`
-            );
+            const response = await axios.get(`${apiURL}/${id}`);
             const data = response.data;
             setCard(data);
         } catch (err) {
@@ -48,29 +45,61 @@ export default function useCards() {
     }, []);
 
 
+    // Get User Cards
+    const getUserCards = useCallback(async (userID) => {
+        setIsLoading(true);
+        try {
+            await getAllCards();
+            const userCards = cards.filter(card => card.user_id.includes(userID));
+            setCards(userCards);
+            setSnack("success", "User cards retrieved successfully!");
+        } catch (err) {
+            setError(err.message);
+        }
+        setIsLoading(false);
+    }, [cards, setSnack, setError]);
+
+
     // user Fav Cards
     const getFavCards = useCallback(async (userID) => {
         setIsLoading(true);
         try {
-            const response = await getAllCards();
-            const allCards = response.data;
-            const favCards = allCards.filter(card => card.likes.includes(userID));
+            await getAllCards();
+            const favCards = cards.filter(card => card.likes.includes(userID));
             setCards(favCards);
             setSnack("success", "Favorite cards retrieved successfully!");
         } catch (err) {
             setError(err.message);
         }
         setIsLoading(false);
-    }, [getAllCards, setSnack, setError]);
+    }, [cards, setSnack, setError]);
 
 
-    // Delete Card
-    const handleDelete = useCallback((cardID) => {
-        console.log("Card " + cardID + " deleted");
+    // Edit card - needs work and test
+    const handleEdit = useCallback(async (id, updatedCard) => {
+        try {
+            const response = await axios.put(`${apiURL}/${id}`, updatedCard);
+            setCards((prevCards) =>
+                prevCards.map((card) => (card.id === id ? response.data : card))
+            );
+        } catch (err) {
+            setError(err.message);
+        }
+    }, [setError]);
+
+
+    // Delete Card - needs work and test
+    const handleDelete = useCallback(async (id) => {
+        try {
+            await axios.delete(`${apiURL}}/${id}`);
+            setCards((prevCards) => prevCards.filter((card) => card.id !== id));
+        } catch (err) {
+            setError(err);
+        }
     }, []);
 
 
-    // Create Card
+    // Create Card - needs work and test
     const handleCreateCard = useCallback(
         async (cardFromClient) => {
             setError(null);
@@ -96,7 +125,7 @@ export default function useCards() {
     );
 
 
-    // Fav / Unfav a card
+    // Fav / Unfav a card - CHATGPT suggestion - startign point.
     const handleLike = useCallback(async (id) => {
         try {
 
@@ -121,13 +150,6 @@ export default function useCards() {
                 { headers: { "x-auth-token": localStorage.getItem("My Token") } }
             );
 
-            // Optionally update local state
-            setCards(prevCards =>
-                prevCards.map(card =>
-                    card._id === id ? { ...card, likes: updatedFavs } : card
-                )
-            );
-
             setSnack("success", `Card ${isFaved ? "unliked" : "liked"} successfully!`);
         } catch (error) {
             setError(error.message);
@@ -137,7 +159,7 @@ export default function useCards() {
     }, [card, getCardById, setSnack, setError, setCards]);
 
 
-    // Get User Cards
 
-    return { cards, card, error, isLoading, getAllCards, handleDelete, handleLike, getCardById, handleCreateCard, getFavCards };
+
+    return { cards, card, error, isLoading, getAllCards, handleDelete, handleEdit, handleLike, getCardById, handleCreateCard, getFavCards, getUserCards };
 };

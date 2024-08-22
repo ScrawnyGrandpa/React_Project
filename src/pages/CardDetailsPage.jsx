@@ -13,6 +13,12 @@ export default function CardDetailsPage() {
         getCardById(id);
     }, [id]);
 
+    useEffect(() => {
+        if (card) {
+            console.log(card);
+        }
+    }, [card]);
+
     if (isLoading) return <Spinner />
     if (error) return <Error errorMessage={error} />
     if (!card) return <Typography>Card not found!</Typography>

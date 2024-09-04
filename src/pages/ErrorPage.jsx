@@ -1,35 +1,64 @@
-import React from 'react'
-import PageHeader from '../components/PageHeader';
-import { Box, Divider, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
-import ROUTES from '../router/routesObject';
-import Stack from '@mui/material/Stack';
+import React from 'react';
+import { Box, Typography, Container, Grid, Paper } from '@mui/material';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { useTheme } from '../providers/ThemeProvider';
 
 export default function ErrorPage() {
+    const { theme } = useTheme();
+
     return (
-        <>
-            <PageHeader title="Error 404" subtitle="Page not found" />
-            <Stack direction="row"
-                divider={<Divider orientation="vertical" flexItem />}
-                spacing={2}>
-                <Typography>
+        <Container maxWidth="md" sx={{ color: theme.palette.text.primary }}>
+            <Grid container spacing={4} alignItems="center">
+                <Grid item xs={12} md={6}>
+                    <Box
+                        sx={{
+                            padding: 3,
+                            borderRadius: 2,
+                            textAlign: 'center',
+                        }}
+                    >
+                        <Typography variant="h3" color="error" gutterBottom>
+                            <ErrorOutlineIcon fontSize="inherit" /> Oops!
+                        </Typography>
+                        <Typography variant="h5" gutterBottom>
+                            Something went wrong
+                        </Typography>
+                        <Typography variant="body1" paragraph>
+                            We encountered an unexpected error while processing your request. Please try again later or contact support if the issue persists.
+                        </Typography>
+                        <Typography variant="body1">
+                            Return to the <a href="/">homepage</a> or use the navigation menu to find your way back.
+                        </Typography>
+                    </Box>
+                </Grid>
 
-                    Oops! It looks like the page you're looking for doesn't exist. It might have been moved or deleted. <br />
-
-                    <Link to={ROUTES.ROOT}>Back to HOME page</Link> or try use the search bar to find what you’re looking for. <Link to={ROUTES.ABOUT}>feel free to contact us</Link> If you need further assistance.</Typography>
-                <Box
-                    component="img"
-                    sx={{
-                        height: 533,
-                        width: 560,
-                        maxHeight: { xs: 233, md: 567 },
-                        maxWidth: { xs: 350, md: 560 },
-                    }}
-                    alt="Blep"
-                    src="../../WhatsApp Image 2024-06-12 at 10.59.58.jpeg"
-                />
-            </Stack>
-            {/*<Link to={ROUTES.ROOT}>HOME</Link> */}
-        </>
-    )
+                <Grid item xs={12} md={6}>
+                    <Paper
+                        sx={{
+                            margin: 1,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '90%',
+                            boxShadow: 'none',
+                            backgroundImage: 'none'
+                        }}
+                        elevation={3}
+                    >
+                        <img
+                            src={"../../assets/errorImage.png"}
+                            alt="Error Illustration"
+                            style={{
+                                width: '100%',
+                                height: 'auto',
+                                objectFit: 'cover',
+                                borderRadius: 8,
+                                filter: 'invert(100%)',
+                            }}
+                        />
+                    </Paper>
+                </Grid>
+            </Grid>
+        </Container>
+    );
 }

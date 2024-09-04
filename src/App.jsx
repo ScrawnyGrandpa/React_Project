@@ -1,27 +1,22 @@
-import CustomThemeProvider from "./providers/CustomThemeProvider"
-import Layout from "./layout/Layout"
-import Router from "./router/Router"
-import { BrowserRouter } from "react-router-dom"
-import UserProvider from "./providers/UserProvider"
-import SnackbarProvider from "./providers/SnackBarProvider"
+import { BrowserRouter } from "react-router-dom";
+import Layout from "./components/layout/Layout";
+import Router from "./Router";
+import AuthenticationProvider from "./providers/AuthenticationProvider";
+import ThemeProvider from "./providers/ThemeProvider";
+import PageUIProvider from "./providers/PageUIProvider";
 
-function App() {
-
+export default function App() {
   return (
-    <>
-      <BrowserRouter>
-        <CustomThemeProvider>
-          <SnackbarProvider>
-            <UserProvider>
-              <Layout>
-                <Router />
-              </Layout>
-            </UserProvider>
-          </SnackbarProvider>
-        </CustomThemeProvider>
-      </BrowserRouter>
-    </>
-  )
+    <BrowserRouter>
+      <PageUIProvider>
+        <AuthenticationProvider>
+          <ThemeProvider>
+            <Layout>
+              <Router />
+            </Layout>
+          </ThemeProvider>
+        </AuthenticationProvider>
+      </PageUIProvider>
+    </BrowserRouter>
+  );
 }
-
-export default App

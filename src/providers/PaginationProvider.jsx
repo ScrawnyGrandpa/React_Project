@@ -7,11 +7,14 @@ const PaginationContext = createContext();
 export default function PaginationProvider({ itemCount, perPage = 24, paramName = "page", children }) {
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
+
   const pageCount = useMemo(() => Math.ceil(itemCount / perPage), [itemCount, perPage]);
+
   const page = useMemo(() => {
     const pageParam = Number(searchParams.get(paramName)) || 1;
     return Math.min(pageParam, pageCount);
   }, [paramName, searchParams, pageCount]);
+
   const start = useMemo(() => (page - 1) * perPage, [page, perPage]);
   const end = useMemo(() => start + perPage, [start]);
 

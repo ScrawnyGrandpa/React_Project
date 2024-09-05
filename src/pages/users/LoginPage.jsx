@@ -7,7 +7,7 @@ import SchemaForm from "../../components/forms/SchemaForm";
 import LoginSchema from "../../schema/LoginSchema";
 import { useAuthentication } from "../../providers/AuthenticationProvider";
 import { useSearch } from "../../providers/SearchProvider";
-import { useLoadCallback } from "../../providers/PageUIProvider";
+import { useLoadCallback, usePageUI } from "../../providers/PageUIProvider";
 import PageContent from "../../components/layout/PageContent";
 
 export default function LoginPage() {
@@ -15,12 +15,15 @@ export default function LoginPage() {
   const schema = useMemo(() => new LoginSchema(), []);
   const { user, login } = useAuthentication();
   const { setShowSearch } = useSearch();
-
+  const { setNotification } = usePageUI();
   const navigate = useNavigate();
+
   const onCancel = useCallback(() => navigate(ROUTES.ROOT), []);
+
   const onSubmit = useLoadCallback(async ({ email, password }) => {
     setDefaultValue({ email, password });
     await login(email, password);
+    setNotification({ message: "Logged In", severity: "success" });
   }, []);
 
   useEffect(() => {

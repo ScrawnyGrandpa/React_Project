@@ -8,7 +8,6 @@ import { useTheme } from "../../providers/ThemeProvider";
 import { useSearch } from "../../providers/SearchProvider";
 import SearchInput from "../forms/SearchInput";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { usePageUI } from "../../providers/PageUIProvider";
 
 const NavLink = styled(Link)(({ theme }) => `
   text-decoration: none;
@@ -23,9 +22,8 @@ const NavLink = styled(Link)(({ theme }) => `
 export default function Header() {
     const anchor = useRef();
     const [isOpen, setIsOpen] = useState(false);
-
-    const { user } = useAuthentication();
-    const { isDarkMode, setIsDarkMode, theme } = useTheme();
+    const { user, logout } = useAuthentication();
+    const { isDarkMode, setIsDarkMode } = useTheme();
     const { searchText, setSearchTextDebounced, showSearch } = useSearch();
     const toggleMenu = () => setIsOpen(prev => !prev);
     const closeMenu = () => setIsOpen(false);
@@ -38,6 +36,8 @@ export default function Header() {
             <MenuItem key="favorites" component={Link} to={ROUTES.FAV_CARDS} onClick={closeMenu}>Favorites</MenuItem>,
             user.isBusiness && <MenuItem key="my-cards" component={Link} to={ROUTES.MY_CARDS} onClick={closeMenu}>My Cards</MenuItem>,
             user.isAdmin && <MenuItem key="sandbox" component={Link} to={ROUTES.SANDBOX} onClick={closeMenu}>Sandbox</MenuItem>,
+            <MenuItem key="user profile" component={Link} to={ROUTES.USER_PROFILE} onClick={closeMenu}>User Profile</MenuItem>,
+            <MenuItem key="logout" component={Link} to={ROUTES.ROOT} onClick={logout}>Logout</MenuItem>,
         ] : [
             <MenuItem key="signup" component={Link} to={ROUTES.SIGNUP} onClick={closeMenu}>Sign Up</MenuItem>,
             <MenuItem key="login" component={Link} to={ROUTES.LOGIN} onClick={closeMenu}>Login</MenuItem>,
@@ -112,7 +112,7 @@ export function AccountMenu() {
         <>
             <Tooltip title="User Settings">
                 <IconButton sx={{ p: 0 }} onClick={toggleMenu} ref={anchor}>
-                    <Avatar alt="avatar" src="../../assets/avatar.png" />
+                    <Avatar alt="avatar" src={user.image.url} />
                 </IconButton>
             </Tooltip>
             <Menu
@@ -125,7 +125,7 @@ export function AccountMenu() {
                 sx={{ mt: 1.5 }}
             >
                 <MenuItem>
-                    <Avatar sx={{ mr: 1.5 }} />
+                    <Avatar sx={{ mr: 1.5 }} src={user.image.url} />
                     {user.email}
                 </MenuItem>
                 <Divider />

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CardModel from "../../models/CardModel";
 import AddCardButton from "../../components/cards/AddCardButton";
 import { useAuthentication } from "../../providers/AuthenticationProvider";
@@ -7,14 +7,16 @@ import CardGrid from "../../components/cards/CardGrid";
 import { useSearch } from "../../providers/SearchProvider";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "../../providers/ThemeProvider";
-import { useLoadCallback, useLoadEffect } from "../../providers/PageUIProvider";
+import { useLoadCallback, usePageUI } from "../../providers/PageUIProvider";
 import PageContent from "../../components/layout/PageContent";
 
 export default function CardsPage() {
+    const [isFirstLoad, setIsFirstLoad] = useState();
     const [cards, setCards] = useState([]);
     const { searchText, setShowSearch } = useSearch();
     const { user } = useAuthentication();
     const { theme } = useTheme();
+    const { setNotification } = usePageUI();
 
     const loadCards = useLoadCallback(async () => {
         const cards = await CardModel.loadAll();
@@ -22,7 +24,20 @@ export default function CardsPage() {
     }, [searchText]);
 
     useEffect(() => {
-        loadCards();
+        loadCards().then(() => {
+            setNotification({
+                message: "Cards Loaded Successfully",
+                severity: "success"
+            })
+        });
+    }, []);
+
+    useEffect(() => {
+        if (isFirstLoad) {
+            setIsFirstLoad(false);
+        } else {
+            loadCards();
+        }
     }, [searchText]);
 
     useEffect(() => {

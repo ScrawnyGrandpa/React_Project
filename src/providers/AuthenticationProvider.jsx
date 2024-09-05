@@ -3,7 +3,7 @@ import UserModel from "../models/UserModel";
 import { jwtDecode } from "jwt-decode";
 import API from "../services/API";
 import UsersAPI from "../services/UsersAPI";
-import { useLoadCallback, useLoadEffect } from "./PageUIProvider";
+import { useLoadEffect } from "./PageUIProvider";
 
 const AuthenticationContext = createContext();
 
@@ -11,7 +11,7 @@ export default function AuthenticationProvider({ children }) {
   const [token, setToken] = useState(API.storedToken);
   const [user, setUser] = useState();
 
-  const login = useLoadCallback(async (email, password) => {
+  const login = useCallback(async (email, password) => {
     const token = await UsersAPI.login({ email, password });
     setToken(token);
   }, []);

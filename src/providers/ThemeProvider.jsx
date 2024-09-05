@@ -10,7 +10,7 @@ const lightPalette = {
         main: '#0B668A', // NavBar Color
     },
     background: {
-        default: '#ffffff', // Website background
+        default: '#C3D5E6', // Website background
         paper: '#F3F4F7', // card background
     },
     text: {

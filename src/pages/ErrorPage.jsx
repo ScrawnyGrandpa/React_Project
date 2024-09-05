@@ -4,7 +4,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '../providers/ThemeProvider';
 
 export default function ErrorPage() {
-    const { theme } = useTheme();
+    const { isDarkMode, theme } = useTheme();
 
     return (
         <Container maxWidth="md" sx={{ color: theme.palette.text.primary }}>
@@ -33,30 +33,17 @@ export default function ErrorPage() {
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-                    <Paper
-                        sx={{
-                            margin: 1,
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '90%',
-                            boxShadow: 'none',
-                            backgroundImage: 'none'
+                    <img
+                        src={"../../assets/errorImage.png"}
+                        alt="Error Illustration"
+                        style={{
+                            width: '100%',
+                            height: 'auto',
+                            objectFit: 'cover',
+                            borderRadius: 8,
+                            filter: isDarkMode ? 'invert(100%)' : 'none',
                         }}
-                        elevation={3}
-                    >
-                        <img
-                            src={"../../assets/errorImage.png"}
-                            alt="Error Illustration"
-                            style={{
-                                width: '100%',
-                                height: 'auto',
-                                objectFit: 'cover',
-                                borderRadius: 8,
-                                filter: 'invert(100%)',
-                            }}
-                        />
-                    </Paper>
+                    />
                 </Grid>
             </Grid>
         </Container>

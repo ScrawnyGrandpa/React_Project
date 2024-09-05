@@ -6,11 +6,11 @@ import { useLayoutEffect, useMemo, useState } from "react";
 import { useAuthentication } from "../../providers/AuthenticationProvider";
 import EllipsisText from "../content/EllipsisText";
 import CardModel from "../../models/CardModel";
-import { useErrorCallback } from "../../providers/PageUIProvider";
+import { useErrorCallback, usePageUI } from "../../providers/PageUIProvider";
 
 export default function Card({ id, ownerId, title, subtitle, phone, image, address, bizNumber, onChange, likes }) {
     return (
-        <MUICard sx={{ display: "flex", flexDirection: "column", height: "100%", borderRadius: '3px', boxShadow: 2 }}>
+        <MUICard sx={{ display: "flex", flexDirection: "column", height: "100%", borderRadius: '3px', boxShadow: 2, border: '1px solid grey' }}>
             <CardActionArea
                 sx={{ flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "stretch" }}
                 LinkComponent={Link}
@@ -69,14 +69,17 @@ export function CardBody({ phone, address, bizNumber }) {
 
 export function CardActions({ id, ownerId, phone, likes, onChange }) {
     const { user } = useAuthentication();
+    const { setNotification } = usePageUI();
     const [isFav, setIsFav] = useState(likes.includes(user?._id));
 
     const handleDelete = useErrorCallback(async () => {
         if (confirm("Are you sure you want to remove card?")) {
             const card = await CardModel.load(id);
+            const deletePromise = card.delete();
             user.cards = user.cards?.filter(({ _id }) => _id != card._id);
-            await card.delete();
             onChange && onChange();
+            await deletePromise;
+            setNotification({ message: "Card deleted", severity: "success" });
         }
     }, [onChange]);
 

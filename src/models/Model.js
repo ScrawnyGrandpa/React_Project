@@ -76,12 +76,12 @@ export default class Model {
     async delete() {
         const index = this.cache.all?.indexOf(this);
 
-        await this.api.delete(this._id);
         delete this.cache[this._id];
 
         if (index > -1) {
             this.cache.all.splice(index, 1);
         }
+
         try {
             await this.api.delete(this._id);
         } catch (e) {

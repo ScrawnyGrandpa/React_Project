@@ -1,7 +1,8 @@
-
 Full Name: Anastacia Siniagovski
 ID: 317261147
 Phone: 050-2212-773
+
+Used: React, Vite, MUI.
 
 - React Cards Project
 
